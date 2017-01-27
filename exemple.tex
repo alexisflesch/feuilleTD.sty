@@ -1,0 +1,126 @@
+%-*- coding: utf-8 -*-
+\documentclass[11pt]{article}
+
+%Paquets
+\usepackage[frenchb]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{answers}
+\usepackage{lipsum}
+\usepackage[margei=probastat,margep=probastat,miroirp]{feuilletd}
+\frenchbsetup{StandardEnumerateEnv=true}
+
+
+%%%%%%
+% \usepackage{showframe}
+%%%%%%
+
+
+%Police
+\usepackage{fouriernc}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyfoot{}
+\lhead{\bfseries \Large Exercise sheet}
+\rhead{\bfseries Exercises}
+\renewcommand{\footrulewidth}{0.4pt}
+\rfoot{UTBM}
+\setlength{\headheight}{18.6pt}
+
+
+
+\usepackage{tikz}
+\newcounter{numExo}
+\newenvironment{exercice}[1][]{\refstepcounter{numExo}
+\noindent
+\begin{trivlist}\hypertarget{exercice \thenumExo}
+\item\raisebox{-0.3em}{\begin{tikzpicture}[x=1.0cm,y=1.0cm]
+    \draw[color=blue!60,fill=blue!50!black, rounded corners=3pt] (0,0) 
+                rectangle (0.7, 0.5); 
+    \node at (0.35,0.25) {\textcolor{white}{\bfseries\arabic{numExo}}};
+    \node[overlay] at (.35,.25) {\hyperlink{correction 
+\thenumExo}{\phantom{\rule{.7cm}{.5cm}}}};
+\end{tikzpicture}}~\textcolor{blue}{\sl #1}\vspace{0.1em}}
+{\end{trivlist}}
+
+
+
+\Newassociation{correction}{CorrectionExoTemp}{correction}
+\renewenvironment{CorrectionExoTemp}[1]{%
+\noindent
+\begin{trivlist}\hypertarget{correction #1}
+\item\raisebox{-0.3em}{\begin{tikzpicture}[x=1.0cm,y=1.0cm]
+    \draw[color=orange!60,fill=orange, rounded corners=3pt] (0,0) 
+                rectangle (0.7, 0.5); 
+    \node at (0.35,0.25) {\textcolor{white}{\bfseries#1}};
+    \node[overlay] at (.35,.25) {\hyperlink{exercice 
+#1}{\phantom{\rule{.7cm}{.5cm}}}};
+\end{tikzpicture}}~\vspace{0.1em}
+}
+{\end{trivlist}}
+
+\usepackage{hyperref}
+\hypersetup{ 
+    hidelinks
+}
+
+\begin{document}
+
+\Opensolutionfile{correction}
+
+
+\begin{exercice}
+ \lipsum[1]
+ \begin{correction}
+  \lipsum[2]
+ \end{correction}
+\end{exercice}
+
+
+\begin{exercice}
+ \lipsum[1]
+ \begin{correction}
+  \lipsum[2]
+ \end{correction}
+\end{exercice}
+
+
+\begin{exercice}
+ \lipsum[1]
+ \begin{correction}
+  \lipsum[2]
+ \end{correction}
+\end{exercice}
+
+
+\begin{exercice}
+ \lipsum[1]
+ \begin{correction}
+  \lipsum[2]
+ \end{correction}
+\end{exercice}
+
+
+\begin{exercice}
+ \lipsum[1]
+ \begin{correction}
+  \lipsum[2]
+ \end{correction}
+\end{exercice}
+
+
+
+\Closesolutionfile{correction}
+\newpage 
+\rhead{\bfseries Solutions}
+\input{correction}
+
+\end{document}
+

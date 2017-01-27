@@ -1,0 +1,359 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{feuilletd}[2014/12/18 version 1]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Utilisation du paquet :                                                            %
+%  \usepackage[margep= , margei= , miroirp, miroiri]{feuilletd}                       %
+%                                                                                     %
+%  où :                                                                               %
+%  margep est la décoration sur les pages paires                                      %
+%  margei est la décoration sur les pages impaires                                    %
+%  miroirp est optionnel : pour un effet miroir sur la décoration des pages paires    %
+%  miroiri est optionnel : pour un effet miroir sur la décoration des pages impaires  %
+%                                                                                     %
+% Liste des décorations :                                                             %
+%   dlexp : développement limité de la fonction exponentielle                         %
+%   dlcos : développement limité de la fonction cosinus                               %
+%   dlsin : développement limité de la fonction sinus                                 %
+%   eqdiff : mêli-mêlo d'équations différentielles et d'edp                           %
+%   probastat : mêli-mêlo d'équations de probas/stats                                 %
+%   crypto : mêli-mêlo d'équations en rapport avec la cryptographie                   %
+%   random : petit dessin et 0 et 1 aléatoires                                        %
+%   vide : pas de déco                                                                %
+%                                                                                     %
+%                                                                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\RequirePackage{ifthen}
+\RequirePackage[absolute]{textpos}
+\setlength{\TPHorizModule}{\paperwidth}
+\setlength{\TPVertModule}{\paperheight}
+
+%Options (dessins dans les marges paires et impaires)
+
+%Miroir ?
+\newif\ifmiroirp
+\newif\ifmiroiri
+
+\RequirePackage{xkeyval}
+\DeclareOptionX{margep}{%
+  \def\my@even@margin{\csname margin@#1\endcsname}}
+\DeclareOptionX{margei}{%
+  \def\my@odd@margin{\csname margin@#1\endcsname}}
+\DeclareOptionX{miroiri}{\miroiritrue}
+\DeclareOptionX{miroirp}{\miroirptrue}
+\ExecuteOptionsX{margep=dlsin,margei=dlcos}
+\ProcessOptionsX
+
+%Géométrie de la page
+\RequirePackage[twocolumn,marginparwidth=3.2cm,a4paper,landscape,top=1.7cm, headsep=.6cm,
+bottom=2cm, foot=1cm,left=4cm,right=2cm,columnsep=30pt]{geometry}
+
+
+% microtype : pour en mettre plus sur une ligne
+\RequirePackage[babel=true,kerning=true]{microtype}
+\RequirePackage{xcolor}
+\RequirePackage{everypage}
+
+\RequirePackage{tikz}
+\usetikzlibrary{arrows}
+
+% Les couleurs
+\definecolor{grisa}{rgb}{.1,.1,.1}
+\definecolor{grisb}{rgb}{.2,.2,.2}
+\definecolor{grisc}{rgb}{.3,.3,.3}
+\definecolor{grisd}{rgb}{.4,.4,.4}
+\definecolor{grise}{rgb}{.5,.5,.5}
+\definecolor{grisf}{rgb}{.6,.6,.6}
+\definecolor{grisg}{rgb}{.7,.7,.7}
+\definecolor{grish}{rgb}{.8,.8,.8}
+\definecolor{grisi}{rgb}{.9,.9,.9}
+
+
+% Espacement négatif pour mettre la décoration dans la marge
+\newcommand{\t@illeretrait}{-2.2cm}
+
+%miroir vertical
+\newcommand{\miroirvert}[1]{%
+   \reflectbox{{#1}}}
+
+
+% \miroirptrue
+\AddEverypageHook{%
+    \setlength{\unitlength}{1cm}
+    \ifthenelse{\isodd{\thepage}}{%impaire
+        \hspace{\t@illeretrait}%
+        \ifmiroiri
+        \miroirvert{%
+          \begin{picture}(0,0)%
+             \put(-3,-21){\rotatebox{90}{\my@odd@margin}}%
+          \end{picture}
+        }
+        \else
+        \begin{picture}(0,0)%
+             \put(0,-21){\rotatebox{90}{\my@odd@margin}}%
+        \end{picture}        
+        \fi
+    }%
+    {%paire
+        \hspace{\t@illeretrait}
+        \ifmiroirp
+        \miroirvert{%
+          \begin{picture}(0,0)%
+             \put(-3,-21){\rotatebox{90}{\my@even@margin}}%
+          \end{picture}
+        }        
+        \else
+        \begin{picture}(0,0)%
+             \put(0,-21){\rotatebox{90}{\my@even@margin}}%
+        \end{picture}
+        \fi
+        }
+}
+
+
+
+
+   
+   
+   
+   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                             Décorations                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Vide %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\margin@vide{}
+
+%%%%%%%%%%%%%%%% Mélanges d'équations différentielles %%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\margin@eqdiff{
+        \hspace{4cm}%
+        \usefont{T1}{pag}{b}{n}%
+        \begin{picture}(0,0)%
+           \fontsize{14}{0}\selectfont
+             \put(0,-.5){\textcolor{grisd}{$y_{n+1} = y_n + hf(t_n,y_n)$}}%
+           \fontsize{25}{0}\selectfont
+             \put(8.5,-2){\textcolor{grisb}{$\displaystyle \frac{\partial T}{\partial t}(x,t)
+                      = D\Delta T(x,t) + \frac{P}{\rho c}$}}%
+           \fontsize{11}{0}\selectfont
+             \put(1.5,-2.5){\textcolor{grisf}{$\displaystyle\int_{\alpha_i}^{\alpha_{i+1}} f(x) 
+                 \mathrm{d}x \simeq (\alpha_{i+1}-\alpha_i) \left(
+                 \frac{1}{6} f(\alpha_{i}) + \frac{2}{3} f(m) + \frac{1}{6} 
+                 f(\alpha_{i+1}) \right)$}}%
+           \fontsize{9}{0}\selectfont
+             \put(3.5,-1.5){\textcolor{grisa}{$\displaystyle \left|\varepsilon^n
+                  \right| \leqslant \frac{M}{2880n^4} (\beta-\alpha)^5$}}%
+           \fontsize{9}{0}\selectfont
+             \put(10.5,-1){\textcolor{grisa}{$\displaystyle 
+                  \theta''(t) + \omega_0^2 \sin(\theta(t))= 0$}}%
+           \fontsize{9}{0}\selectfont
+             \put(.5,-1.5){\textcolor{grisa}{$\displaystyle 
+                  \frac{\mathrm{d}|\overrightarrow{r}\rangle}{\mathrm{d}t} = 0$}}%
+        \end{picture}
+}
+
+%%%%%%%%%%%%%%%% Mélanges d'équations de probas/stats %%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\margin@probastat{
+        \hspace{4cm}%
+        \usefont{T1}{pag}{b}{n}%
+        \begin{picture}(0,0)%
+           \fontsize{14.4}{0}\selectfont
+             \put(0,-.5){\textcolor{grisd}{$\displaystyle%
+                 \mathbb{E}(\varphi(X)) = \int \varphi(x) \mathrm{d}\mathbb{P}_X(x)
+                 $}}%
+           \fontsize{14.4}{0}\selectfont
+             \put(10.5,-2.4){\textcolor{grisb}{$\displaystyle
+                 \mathbb{P} \left( \sum_{j=1}^J 
+                 \frac{\left(N_{\hat{p}_j}-N_{p_j}\right)^2}{N_{p_j}}
+                 \leqslant \chi_{J-1,\alpha}^2\right) \simeq 1-\alpha$}}%
+           \fontsize{11}{0}\selectfont
+             \put(1.5,-2.5){\textcolor{grisf}{$\displaystyle%
+                 \mathbb{P}(A) = \sum_{i\in I}
+                 \mathbb{P}_{B_i}(A)\mathbb{P}(B_i)
+                 $}}%
+           \fontsize{11}{0}\selectfont
+             \put(4.5,-1.5){\textcolor{grisa}{$\displaystyle 
+                 \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{+\infty} \mathrm{e}^{-x^2/2}
+                 \mathrm{d}x = 1
+                 $}}%
+           \fontsize{9}{0}\selectfont
+             \put(8.5,-1){\textcolor{grisc}{$\displaystyle 
+                  \frac{\overline{X}-\mu}{\sigma} \rightarrow \mathcal{N}(0,1)
+                  $}}%
+           \fontsize{9}{0}\selectfont
+             \put(.5,-1.5){\textcolor{grisf}{$\displaystyle 
+                  \binom{n}{k} p^k (1-p)^{n-k}
+                  $}}%
+             \put(7,-2.8){%
+                 \includegraphics{gauss}         
+             }
+             \put(13,-1.4){%
+                 \includegraphics{chi2}
+             }
+        \end{picture}
+}
+
+
+%%%%%%%%%%%%%%%% Décoration "aléatoire" %%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\margin@random{
+        \hspace{2cm}%
+        \usefont{T1}{pag}{b}{n}%
+        \begin{picture}(0,0)%
+            \put(2,-3){\includegraphics[width=18cm]{alea2}}
+        \end{picture}
+}
+
+
+%%%%%%%%%%%%%%%% Mélanges d'équations en rapport avec la cryptographie %%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\margin@crypto{
+        \hspace{4cm}%
+        \usefont{T1}{pag}{b}{n}%
+        \begin{picture}(0,0)%
+           \fontsize{14.4}{0}\selectfont
+             \put(3.8,-2){\textcolor{grisd}{$\displaystyle%
+                 \varphi(n) = (p-1)(q-1)
+                 $}}%
+           \fontsize{17.28}{0}\selectfont
+             \put(8.1,-1){\textcolor{grisf}{$\displaystyle%
+                 cd \equiv e ~\mathrm{mod}~ \varphi(n)
+                 $}}%
+            \fontsize{12}{2}\selectfont
+                 \put(0,-1.5){\textcolor{grisd}{AES}}%
+             \fontsize{12}{2}\selectfont
+                 \put(0,-.5){\textcolor{grise}{
+                    01100011 01110010 01111001 01110000 01110100 01101111 01100111 01110010 01100001
+                 }}%
+                 \put(0,-1){\textcolor{grisg}{
+                    01110000 01101000
+                    01101001 01100101
+                 }}%
+                 \put(12.5,-1){\textcolor{grisc}{
+                    6d 61 70 6c 65
+                 }}%
+                 \put(15.75,-1){\textcolor{grisd}{
+                    SHA1 MD5
+                 }}%
+                 \put(1,-1.5){\textcolor{grisg}{
+                    82 83 65
+                 }}%
+                 \put(2.85,-1.5){\textcolor{grisg}{
+                    445d0434ad7b42aff5bab616ebb41970
+                 }}%
+                 \put(10,-2){\textcolor{grisc}{
+                    01100001 01110011 01111001 01101101 
+                 }}%
+                 \put(0,-2.5){\textcolor{grise}{
+                    01100101 01110100 01110010 01101001 01110001 01110101 01100101
+                 }}%
+                 \put(17,-2.5){\textcolor{grisd}{
+                    TKIP
+                 }}%
+                 \put(14,-2.5){\textcolor{grisg}{
+                    65 83 67 73 73
+                 }}%
+                 \put(0,-2){\textcolor{grish}{
+                    117 116 102 45 56
+                 }}%
+                 \put(10.8,-1.5){\textcolor{grisb}{
+                    ASCII
+                 }}%
+                 \put(0,-3){\textcolor{grisf}{
+                    01100011 01101100 01100101 01110000 01110010 01101001 01110110 01100101 01100101
+                 }}%
+                 \put(12.05,-1.5){\textcolor{grisf}{
+                    97 108 112 104 97 98 101 116
+                 }}%
+                 \put(8.05,-2){\textcolor{grish}{
+                    Y2xlZg==
+                 }}%
+     \end{picture}
+}
+% ROT13
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% DL sinus %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\margin@dlsin{
+        \hspace{4.5cm}
+        \usefont{T1}{pag}{b}{n}
+        \fontsize{90}{0}  \selectfont
+        \textcolor{grise}{ 
+            $x$%
+            \fontsize{67}{60}\selectfont$-\, \frac{x^3}{3!}$%
+            \fontsize{49}{60}\selectfont$+\, \frac{x^5}{5!}$
+            \fontsize{36}{60}\selectfont$-\, \frac{x^7}{7!}$
+            \fontsize{27}{60}\selectfont$+\, \frac{x^9}{9!}$
+            \fontsize{20}{60}\selectfont$-\, \frac{x^{11}}{11!}$
+            \fontsize{11}{60}\selectfont$+\, \frac{x^{13}}{13!}$
+            \fontsize{8}{60}\selectfont$-\, \frac{x^{15}}{15!}$
+            \fontsize{6}{60}\selectfont$+\, \ldots$
+        }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% DL cosinus %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\margin@dlcos{
+        \hspace{4.5cm}
+        \usefont{T1}{pag}{b}{n}
+        \fontsize{90}{0}  \selectfont
+        \textcolor{grise}{ 
+            $1$%
+            \fontsize{67}{60}\selectfont$-\, \frac{x^2}{2!}$%
+            \fontsize{49}{60}\selectfont$+\, \frac{x^4}{4!}$
+            \fontsize{36}{60}\selectfont$-\, \frac{x^6}{6!}$
+            \fontsize{27}{60}\selectfont$+\, \frac{x^8}{8!}$
+            \fontsize{20}{60}\selectfont$-\, \frac{x^{10}}{10!}$
+            \fontsize{11}{60}\selectfont$+\, \frac{x^{12}}{12!}$
+            \fontsize{8}{60}\selectfont$-\, \frac{x^{14}}{14!}$
+            \fontsize{6}{60}\selectfont$+\, \ldots$
+        }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% DL exponentielle %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\margin@dlexp{
+    \hspace{5cm}
+    \usefont{T1}{pag}{b}{n}
+    \fontsize{90}{60}\selectfont
+    \textcolor{grise}{$1$%
+    \fontsize{67}{60}\selectfont$+\, x$%
+    \fontsize{49}{60}\selectfont$+\, \frac{x^2}{2!}$
+    \fontsize{36}{60}\selectfont$+\, \frac{x^3}{3!}$
+    \fontsize{27}{60}\selectfont$+\, \frac{x^4}{4!}$
+    \fontsize{20}{60}\selectfont$+\, \frac{x^5}{5!}$
+    \fontsize{11}{60}\selectfont$+\, \frac{x^6}{6!}$
+    \fontsize{8}{60}\selectfont$+\, \frac{x^7}{7!}$
+    \fontsize{6}{60}\selectfont$+\, \ldots$}
+}
+
+%%%%%%%%%%%%%%%% Mélanges d'équations pour MT11 %%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\margin@mt{
+        \hspace{4cm}%
+        \usefont{T1}{pag}{b}{n}%
+        \begin{picture}(0,0)%
+           \fontsize{12}{0}\selectfont
+             \put(0,-1){\textcolor{grisd}{$\displaystyle(a+b)^n = \sum_{k=0}^n 
+                \binom{n}{k} a^kb^{n-k}$}}%
+           \fontsize{11}{0}\selectfont
+                \put(1.5,-2.5){\textcolor{grisf}{$\displaystyle 
+                \zeta_k = |a|^{1/n} \mathrm{e}^{i(\mathrm{arg}(a)+2k\pi)/n}$}}%
+           \put(13.5,-2.5){%
+                 \includegraphics[width=4.5cm]{dl_sin2}}
+           \put(6.4,-2.9){%
+                 \includegraphics[width=4.5cm]{suite_cv}}
+           \fontsize{9}{0}\selectfont
+             \put(10.5,-1){\textcolor{grisa}{$\displaystyle 
+                  \binom{n}{k} = \frac{n!}{k!(n-k)!}$}}%
+           \fontsize{9}{0}\selectfont
+             \put(4,-1.5){\textcolor{grisa}{$\displaystyle 
+                  \forall \varepsilon>0,\exists 
+                      n_0\in\mathbb{N},\forall n\geqslant n_0,
+                      |u_n-\ell| \leqslant \varepsilon$}}%
+          \fontsize{10}{0}\selectfont
+             \put(12,-2.3){\textcolor{grisc}{$\displaystyle 
+                  (AB)^{-1} = B^{-1}A^{-1}$}}%
+          \fontsize{9}{0}\selectfont
+             \put(7,-.6){\textcolor{black}{$\displaystyle 
+                \neg (p\vee q) \equiv (\neg p)\wedge (\neg q)$}}%
+        \end{picture}
+}
+
